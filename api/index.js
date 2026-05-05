@@ -97,15 +97,7 @@ app.post(['/api/upload', '/upload'], authMiddleware, upload.single('image'), (re
     res.json({ success: true, url: `/uploads/${req.file.filename}` });
 });
 
-// Serve Frontend
-const distPath = path.join(process.cwd(), 'dist');
-app.use(express.static(distPath));
-app.get('*', (req, res) => {
-    if (req.path.startsWith('/api')) return res.status(404).json({ message: 'API route not found' });
-    const indexPath = path.join(distPath, 'index.html');
-    if (fs.existsSync(indexPath)) res.sendFile(indexPath);
-    else res.status(404).send('Frontend building...');
-});
+// --- END OF API ROUTES ---
 
 // Export for Vercel
 module.exports = app;
