@@ -21,7 +21,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
@@ -508,6 +507,9 @@ app.post('/api/reviews', (req, res) => {
 
 
 // Start Server
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is running on port ${PORT}`);
+const port = parseInt(process.env.PORT, 10) || 5000;
+app.listen(port, '0.0.0.0', () => {
+    console.log(`🚀 Server successfully started!`);
+    console.log(`📡 Listening on: 0.0.0.0:${port}`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
