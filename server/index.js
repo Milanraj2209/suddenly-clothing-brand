@@ -31,6 +31,21 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Helper functions to handle JSON data
 const readData = (filename) => {
     const filePath = path.join(__dirname, 'data', filename);
+    
+    // Ensure the data directory exists
+    const dataDir = path.join(__dirname, 'data');
+    if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+    }
+
+    // If file doesn't exist, create it with default data
+    if (!fs.existsSync(filePath)) {
+        // Special case for config.json
+        const defaultData = filename === 'config.json' ? { isLocked: false } : [];
+        fs.writeFileSync(filePath, JSON.stringify(defaultData, null, 2));
+        return defaultData;
+    }
+
     const rawData = fs.readFileSync(filePath);
     return JSON.parse(rawData);
 };
