@@ -9,6 +9,7 @@ const Admin = ({ onLogout }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [homePageConfig, setHomePageConfig] = useState({ sections: [], enableCountdown: false });
   const [isStoreLocked, setIsStoreLocked] = useState(false);
@@ -90,12 +91,8 @@ const Admin = ({ onLogout }) => {
     return res;
   };
 
-  const [categories, setCategories] = useState([]);
-  const [coupons, setCoupons] = useState([]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [newCategory, setNewCategory] = useState({ name: '', slug: '', image: 'category_new.png' });
+  const [newCoupon, setNewCoupon] = useState({ code: '', type: 'percentage', discount: '' });
 
   const fetchData = async () => {
     try {
@@ -104,7 +101,7 @@ const Admin = ({ onLogout }) => {
       const uploadsRes = await fetch('/api/uploads');
       const configRes = await fetch('/api/config');
       const catRes = await fetch('/api/categories');
-      const coupRes = await authenticatedFetch('/api/admin/coupons');
+      const coupRes = await authenticatedFetch('/api/coupons');
       
       if (configRes.ok) {
         const configData = await configRes.json();
@@ -532,7 +529,7 @@ const Admin = ({ onLogout }) => {
                 <div className="header-actions">
                   <button className="btn-secondary">Download Template</button>
                   <button className="btn-secondary indigo">Import CSV</button>
-                  <button className="btn-primary gold" onClick={() => setIsGalleryOpen(true)}>+ Add Product</button>
+                  <button className="btn-primary gold" onClick={() => setIsProductModalOpen(true)}>+ Add Product</button>
                 </div>
               </div>
 
@@ -717,23 +714,71 @@ const Admin = ({ onLogout }) => {
             <section className="admin-section-v2">
               <div className="section-header-v2">
                 <h3>Category Management</h3>
-                <button className="btn-primary">Add New Category</button>
               </div>
+              
+              <div className="admin-form-v2">
+                <h4>Add New Category</h4>
+                <div className="form-grid-v2">
+                  <input 
+                    type="text" 
+                    placeholder="Category Name (e.g. Summer Sale)" 
+                    value={newCategory.name}
+                    onChange={(e) => setNewCategory({...newCategory, name: e.target.value})}
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="Slug (e.g. summer-sale)" 
+                    value={newCategory.slug}
+                    onChange={(e) => setNewCategory({...newCategory, slug: e.target.value})}
+                  />
+                  <select 
+                    value={newCategory.image}
+                    onChange={(e) => setNewCategory({...newCategory, image: e.target.value})}
+                  >
+                    {Object.keys(imageMap).map(img => (
+                      <option key={img} value={img}>{img}</option>
+                    ))}
+                  </select>
+                  <button className="btn-primary" onClick={async () => {
+                    if (!newCategory.name) return alert('Name required');
+                    const res = await authenticatedFetch('/api/categories', {
+                      method: 'POST',
+                      body: JSON.stringify(newCategory)
+                    });
+                    if (res && res.ok) {
+                      fetchData();
+                      setNewCategory({ name: '', slug: '', image: 'category_new.png' });
+                    }
+                  }}>Add Category</button>
+                </div>
+              </div>
+
               <div className="table-container-v2">
                 <table className="admin-table-v2">
                   <thead>
                     <tr>
+                      <th>IMAGE</th>
                       <th>NAME</th>
-                      <th>TOTAL PRODUCTS</th>
-                      <th>STATUS</th>
+                      <th>SLUG</th>
+                      <th>PRODUCTS</th>
+                      <th>ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {categories.map((cat, i) => (
-                      <tr key={i}>
-                        <td className="font-medium">{cat}</td>
-                        <td>{products.filter(p => p.category === cat).length} Products</td>
-                        <td><span className="status-pill delivered">Active</span></td>
+                    {categories.map((cat) => (
+                      <tr key={cat.id}>
+                        <td><img src={getImageUrl(cat.image)} alt="" className="table-thumb" /></td>
+                        <td className="font-medium">{cat.name}</td>
+                        <td>{cat.slug}</td>
+                        <td>{products.filter(p => p.category === cat.name).length} Items</td>
+                        <td>
+                          <button className="icon-btn delete" onClick={async () => {
+                            if (window.confirm('Delete this category?')) {
+                              const res = await authenticatedFetch(`/api/categories/${cat.id}`, { method: 'DELETE' });
+                              if (res && res.ok) fetchData();
+                            }
+                          }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -746,8 +791,41 @@ const Admin = ({ onLogout }) => {
             <section className="admin-section-v2">
               <div className="section-header-v2">
                 <h3>Discount Coupons</h3>
-                <button className="btn-primary">Generate Coupon</button>
               </div>
+
+              <div className="admin-form-v2">
+                <h4>Create New Coupon</h4>
+                <div className="form-grid-v2">
+                  <input 
+                    type="text" 
+                    placeholder="CODE (e.g. SAVE20)" 
+                    value={newCoupon.code}
+                    onChange={(e) => setNewCoupon({...newCoupon, code: e.target.value.toUpperCase()})}
+                  />
+                  <select value={newCoupon.type} onChange={(e) => setNewCoupon({...newCoupon, type: e.target.value})}>
+                    <option value="percentage">Percentage (%)</option>
+                    <option value="fixed">Fixed Amount (₹)</option>
+                  </select>
+                  <input 
+                    type="number" 
+                    placeholder="Value" 
+                    value={newCoupon.discount}
+                    onChange={(e) => setNewCoupon({...newCoupon, discount: e.target.value})}
+                  />
+                  <button className="btn-primary" onClick={async () => {
+                    if (!newCoupon.code || !newCoupon.discount) return alert('Fill all fields');
+                    const res = await authenticatedFetch('/api/coupons', {
+                      method: 'POST',
+                      body: JSON.stringify(newCoupon)
+                    });
+                    if (res && res.ok) {
+                      fetchData();
+                      setNewCoupon({ code: '', type: 'percentage', discount: '' });
+                    }
+                  }}>Generate Coupon</button>
+                </div>
+              </div>
+
               <div className="table-container-v2">
                 <table className="admin-table-v2">
                   <thead>
@@ -755,16 +833,23 @@ const Admin = ({ onLogout }) => {
                       <th>CODE</th>
                       <th>TYPE</th>
                       <th>VALUE</th>
-                      <th>EXPIRY</th>
+                      <th>STATUS</th>
+                      <th>ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {coupons.map((c, i) => (
-                      <tr key={i}>
+                    {coupons.map((c) => (
+                      <tr key={c.id}>
                         <td className="font-medium">{c.code}</td>
-                        <td>{c.type}</td>
+                        <td>{c.type === 'percentage' ? 'Percentage' : 'Fixed'}</td>
                         <td>{c.type === 'percentage' ? `${c.discount}%` : `₹${c.discount}`}</td>
-                        <td>31 Dec 2024</td>
+                        <td><span className="badge-v2 green">Active</span></td>
+                        <td>
+                          <button className="icon-btn delete" onClick={async () => {
+                            const res = await authenticatedFetch(`/api/coupons/${c.id}`, { method: 'DELETE' });
+                            if (res && res.ok) fetchData();
+                          }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -785,26 +870,34 @@ const Admin = ({ onLogout }) => {
                       <th>PRODUCT</th>
                       <th>CURRENT STOCK</th>
                       <th>ALERTS</th>
-                      <th>UPDATE STOCK</th>
+                      <th>QUICK UPDATE</th>
                     </tr>
                   </thead>
                   <tbody>
                     {products.map(p => (
                       <tr key={p.id}>
                         <td>{p.name}</td>
-                        <td>{p.inventory} units</td>
+                        <td className="font-medium">{p.inventory} units</td>
                         <td>
-                          {p.inventory <= 5 && <span className="status-pill cancelled">Low Stock</span>}
-                          {p.inventory > 5 && <span className="status-pill delivered">Optimal</span>}
+                          {p.inventory <= 5 ? (
+                            <span className="badge-v2 red">Critical</span>
+                          ) : (
+                            <span className="badge-v2 green">Healthy</span>
+                          )}
                         </td>
                         <td>
-                          <div style={{display: 'flex', gap: '10px'}}>
+                          <div className="inventory-update-cell">
                             <input 
                               type="number" 
-                              style={{width: '60px', padding: '5px'}} 
+                              className="qty-input"
                               defaultValue={p.inventory}
-                              onBlur={(e) => updateProduct(p.id, { inventory: e.target.value })}
+                              onBlur={async (e) => {
+                                const newVal = parseInt(e.target.value);
+                                if (newVal === p.inventory) return;
+                                await updateProduct(p.id, { inventory: newVal });
+                              }}
                             />
+                            <span className="hint">Auto-saves on blur</span>
                           </div>
                         </td>
                       </tr>
@@ -814,6 +907,7 @@ const Admin = ({ onLogout }) => {
               </div>
             </section>
           )}
+
 
           {activeTab === 'settings' && (
             <section className="admin-section-v2">
@@ -880,7 +974,78 @@ const Admin = ({ onLogout }) => {
         </div>
       </main>
 
-      {/* Media Library Modal Remains Same but styled */}
+      {/* Add Product Modal */}
+      {isProductModalOpen && (
+        <div className="admin-modal-overlay" onClick={() => setIsProductModalOpen(false)}>
+          <div className="admin-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Create New Product</h3>
+              <button className="close-btn" onClick={() => setIsProductModalOpen(false)}>&times;</button>
+            </div>
+            
+            <form className="product-form" onSubmit={async (e) => {
+              await handleAddProduct(e);
+              setIsProductModalOpen(false);
+            }}>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Product Name</label>
+                  <input required type="text" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} placeholder="e.g. Silk Evening Dress" />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Price (₹)</label>
+                  <input required type="text" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} placeholder="e.g. ₹2,499" />
+                </div>
+                <div className="form-group">
+                  <label>Original Price (Optional)</label>
+                  <input type="text" value={newProduct.originalPrice} onChange={e => setNewProduct({...newProduct, originalPrice: e.target.value})} placeholder="e.g. ₹4,999" />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Category</label>
+                  <select value={newProduct.category} onChange={e => setNewProduct({...newProduct, category: e.target.value})}>
+                    {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Initial Stock</label>
+                  <input type="number" value={newProduct.inventory} onChange={e => setNewProduct({...newProduct, inventory: e.target.value})} />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Selected Images</label>
+                  <div className="image-selection-preview">
+                    {newProduct.imagesString ? (
+                      <div className="preview-grid">
+                        {newProduct.imagesString.split(',').map(img => (
+                          <img key={img} src={getImageUrl(img.trim())} alt="" />
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="no-images">No images selected</p>
+                    )}
+                    <button type="button" className="btn-secondary" onClick={() => setIsGalleryOpen(true)}>Open Media Library</button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-actions">
+                <button type="button" className="btn-secondary" onClick={() => setIsProductModalOpen(false)}>Cancel</button>
+                <button type="submit" className="btn-primary gold">Save Product</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Media Library Modal */}
       {isGalleryOpen && (
         <div className="media-library-overlay" onClick={() => setIsGalleryOpen(false)}>
           <div className="media-library-modal" onClick={e => e.stopPropagation()}>

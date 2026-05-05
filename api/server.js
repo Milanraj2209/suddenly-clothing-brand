@@ -30,7 +30,12 @@ app.use('/uploads', express.static(UPLOADS_DIR));
 const readData = (filename) => {
     const filePath = path.join(DATA_DIR, filename);
     if (!fs.existsSync(filePath)) {
-        const defaultData = filename === 'config.json' ? { isLocked: false } : [];
+        let defaultData = [];
+        if (filename === 'config.json') defaultData = { isLocked: false };
+        if (filename === 'categories.json') defaultData = [
+            { id: 1, name: 'New Arrivals', slug: 'new', image: 'category_new.png' },
+            { id: 2, name: 'Knitwear', slug: 'knitwear', image: 'knitwear.png' }
+        ];
         fs.writeFileSync(filePath, JSON.stringify(defaultData, null, 2));
         return defaultData;
     }
@@ -47,9 +52,12 @@ const authMiddleware = (req, res, next) => {
     res.status(401).json({ message: 'Unauthorized' });
 };
 
-// --- API ---
+// --- API ROUTES ---
+
+// Test & Health
 app.get(['/api/test', '/test'], (req, res) => res.json({ success: true, message: 'API is Live!' }));
 
+// --- PRODUCTS ---
 app.get(['/api/products', '/products'], (req, res) => {
     const products = readData('products.json');
     const { category } = req.query;
@@ -58,15 +66,89 @@ app.get(['/api/products', '/products'], (req, res) => {
 
 app.post(['/api/products', '/products'], authMiddleware, (req, res) => {
     const products = readData('products.json');
-    const newProduct = { id: Date.now(), inventory: 5, ...req.body };
+    const newProduct = { id: Date.now(), inventory: 10, ...req.body };
     products.push(newProduct);
     writeData('products.json', products);
     res.status(201).json(newProduct);
 });
 
+app.put(['/api/products/:id', '/products/:id'], authMiddleware, (req, res) => {
+    const products = readData('products.json');
+    const index = products.findIndex(p => p.id == req.params.id);
+    if (index === -1) return res.status(404).json({ message: 'Product not found' });
+    products[index] = { ...products[index], ...req.body };
+    writeData('products.json', products);
+    res.json(products[index]);
+});
+
+app.delete(['/api/products/:id', '/products/:id'], authMiddleware, (req, res) => {
+    let products = readData('products.json');
+    products = products.filter(p => p.id != req.params.id);
+    writeData('products.json', products);
+    res.json({ message: 'Product deleted' });
+});
+
+// --- CATEGORIES ---
 app.get(['/api/categories', '/categories'], (req, res) => res.json(readData('categories.json')));
+
+app.post(['/api/categories', '/categories'], authMiddleware, (req, res) => {
+    const categories = readData('categories.json');
+    const newCategory = { id: Date.now(), ...req.body };
+    categories.push(newCategory);
+    writeData('categories.json', categories);
+    res.status(201).json(newCategory);
+});
+
+app.delete(['/api/categories/:id', '/categories/:id'], authMiddleware, (req, res) => {
+    let categories = readData('categories.json');
+    categories = categories.filter(c => c.id != req.params.id);
+    writeData('categories.json', categories);
+    res.json({ message: 'Category deleted' });
+});
+
+// --- COUPONS ---
+app.get(['/api/coupons', '/coupons'], authMiddleware, (req, res) => res.json(readData('coupons.json')));
+
+app.post(['/api/coupons', '/coupons'], authMiddleware, (req, res) => {
+    const coupons = readData('coupons.json');
+    const newCoupon = { id: Date.now(), ...req.body };
+    coupons.push(newCoupon);
+    writeData('coupons.json', coupons);
+    res.status(201).json(newCoupon);
+});
+
+app.delete(['/api/coupons/:id', '/coupons/:id'], authMiddleware, (req, res) => {
+    let coupons = readData('coupons.json');
+    coupons = coupons.filter(c => c.id != req.params.id);
+    writeData('coupons.json', coupons);
+    res.json({ message: 'Coupon deleted' });
+});
+
+// --- ORDERS ---
+app.get(['/api/orders', '/orders'], authMiddleware, (req, res) => res.json(readData('orders.json')));
+
+app.put(['/api/orders/:id', '/orders/:id'], authMiddleware, (req, res) => {
+    const orders = readData('orders.json');
+    const index = orders.findIndex(o => o.id === req.params.id);
+    if (index === -1) return res.status(404).json({ message: 'Order not found' });
+    orders[index] = { ...orders[index], ...req.body };
+    writeData('orders.json', orders);
+    res.json(orders[index]);
+});
+
+// --- USERS ---
+app.get(['/api/users', '/users'], authMiddleware, (req, res) => res.json(readData('users.json')));
+
+// --- CONFIG ---
 app.get(['/api/config', '/config'], (req, res) => res.json(readData('config.json')));
 
+app.put(['/api/config', '/config'], authMiddleware, (req, res) => {
+    const config = { ...readData('config.json'), ...req.body };
+    writeData('config.json', config);
+    res.json(config);
+});
+
+// --- AUTH ---
 app.post(['/api/admin/login', '/admin/login'], (req, res) => {
     if (req.body.password === ADMIN_PASSWORD) res.json({ success: true, token: SECRET_TOKEN });
     else res.status(401).json({ success: false });
