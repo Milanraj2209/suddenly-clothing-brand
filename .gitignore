@@ -10,10 +10,11 @@ build/
 .env.local
 .env.production
 
-# Server data (sensitive/runtime files)
-server/data/orders.json
-server/data/users.json
-server/uploads/
+# Server runtime data
+api/uploads/*
+!api/uploads/.gitkeep
+api/data/orders.json
+api/data/users.json
 
 # Logs
 *.log
