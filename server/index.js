@@ -493,6 +493,6 @@ app.post('/api/reviews', (req, res) => {
 
 
 // Start Server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
 });
