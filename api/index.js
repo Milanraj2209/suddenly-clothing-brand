@@ -1,11 +1,16 @@
-const express = require('express');
-const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
-const bcrypt = require('bcryptjs');
-const multer = require('multer');
+import express from 'express';
+import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
+import multer from 'multer';
 
-// Standardize path resolution for Vercel and Local
+// Fix for __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Standardize path resolution (using process.cwd() for Vercel)
 const DATA_DIR = path.join(process.cwd(), 'api', 'data');
 const UPLOADS_DIR = path.join(process.cwd(), 'api', 'uploads');
 
@@ -97,7 +102,5 @@ app.post(['/api/upload', '/upload'], authMiddleware, upload.single('image'), (re
     res.json({ success: true, url: `/uploads/${req.file.filename}` });
 });
 
-// --- END OF API ROUTES ---
-
 // Export for Vercel
-module.exports = app;
+export default app;
