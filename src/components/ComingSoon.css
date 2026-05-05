@@ -1,0 +1,124 @@
+.coming-soon-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+.coming-soon-container::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+  top: -25%;
+  left: -25%;
+  animation: pulse 10s infinite alternate;
+}
+
+.coming-soon-content {
+  max-width: 650px;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  padding: 80px 40px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: fadeIn 1.5s ease-out;
+}
+
+.coming-soon-logo {
+  font-family: var(--font-secondary);
+  font-size: 4.5rem;
+  letter-spacing: -2px;
+  color: #D4AF37;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+.coming-soon-divider {
+  width: 60px;
+  height: 1px;
+  background-color: rgba(212, 175, 55, 0.5);
+  margin: 0 auto 40px;
+}
+
+.coming-soon-title {
+  font-family: var(--font-primary);
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: #fff;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.coming-soon-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 50px;
+  font-weight: 300;
+}
+
+.coming-soon-newsletter {
+  margin-top: 40px;
+}
+
+.coming-soon-newsletter p {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-gray);
+  margin-bottom: 15px;
+}
+
+.newsletter-form {
+  display: flex;
+  max-width: 400px;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.newsletter-form input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 15px 0;
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  outline: none;
+  color: white;
+}
+
+.newsletter-form button {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 10px;
+  color: #D4AF37;
+  transition: transform 0.3s;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); opacity: 0.5; }
+  to { transform: scale(1.2); opacity: 0.8; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .coming-soon-logo { font-size: 2.8rem; }
+  .coming-soon-title { font-size: 1.4rem; }
+  .coming-soon-subtitle { font-size: 1rem; }
+}

@@ -1,0 +1,105 @@
+.footer {
+  background-color: var(--color-white);
+  padding: 80px 5% 40px;
+  border-top: 1px solid var(--color-light-gray);
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 80px;
+  gap: 50px;
+}
+
+.footer-brand {
+  max-width: 300px;
+}
+
+.footer-logo {
+  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  font-style: italic;
+  color: #6B3A2A;
+  letter-spacing: 0px;
+  margin-bottom: 20px;
+}
+
+.footer-tagline {
+  color: var(--color-gray);
+  font-size: 0.95rem;
+}
+
+.footer-links-grid {
+  display: flex;
+  gap: 80px;
+}
+
+.footer-heading {
+  font-family: var(--font-primary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.footer-column ul li {
+  margin-bottom: 12px;
+}
+
+.footer-column ul li a {
+  font-size: 0.9rem;
+  color: var(--color-dark-gray);
+  transition: color var(--transition-fast);
+}
+
+.footer-column ul li a:hover {
+  color: var(--color-black);
+}
+
+.footer-bottom {
+  padding-top: 40px;
+  border-top: 1px solid var(--color-light-gray);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-copyright {
+  font-size: 0.85rem;
+  color: var(--color-gray);
+}
+
+.footer-socials {
+  display: flex;
+  gap: 25px;
+}
+
+.footer-socials a {
+  font-size: 0.85rem;
+  color: var(--color-dark-gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 900px) {
+  .footer-top {
+    flex-direction: column;
+    gap: 40px;
+  }
+  .footer-links-grid {
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+}

@@ -1,0 +1,115 @@
+.arrivals-slider-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  cursor: grab;
+  scrollbar-width: none; /* Hide standard scrollbar */
+  -ms-overflow-style: none;
+}
+
+.arrivals-slider-wrapper::-webkit-scrollbar {
+  display: none; /* Hide standard scrollbar */
+}
+
+.arrivals-slider-track {
+  display: flex;
+  gap: 30px;
+  width: max-content;
+}
+
+.arrival-card {
+  width: 400px; /* Adjust based on image aspect ratio */
+  flex-shrink: 0;
+  position: relative;
+}
+
+.arrival-image-wrapper {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background-color: #f1f1f1; /* Light gray background like reference */
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.arrival-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.arrival-card:hover .arrival-image {
+  transform: scale(1.05);
+}
+
+.arrival-badge-v3 {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #000;
+  color: #fff;
+  padding: 6px 14px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border-radius: 20px;
+}
+
+.arrival-details {
+  padding: 0 5px;
+}
+
+.arrival-name {
+  font-family: var(--font-secondary);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.current-price {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #000;
+}
+
+.original-price {
+  color: #999;
+  text-decoration: line-through;
+  font-size: 0.9rem;
+}
+
+/* Scrollbar Indicator */
+.slider-scrollbar {
+  width: 100%;
+  height: 4px;
+  background: #f0f0f0;
+  margin-top: 40px;
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.slider-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15%; /* Width of the indicator */
+  height: 100%;
+  background: #e0e0e0;
+  border-radius: 2px;
+  transition: left 0.1s linear;
+}
+
+@media (max-width: 768px) {
+  .arrival-card {
+    width: 280px;
+  }
+}

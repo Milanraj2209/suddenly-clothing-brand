@@ -1,0 +1,30 @@
+.featured {
+  background-color: var(--color-white);
+  text-align: center;
+}
+
+.featured-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.featured-title {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 30px;
+  color: var(--color-black);
+}
+
+.featured-desc {
+  font-size: 1.2rem;
+  color: var(--color-dark-gray);
+  margin-bottom: 40px;
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .featured-title {
+    font-size: 2.2rem;
+  }
+}

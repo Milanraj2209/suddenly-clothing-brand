@@ -1,0 +1,6 @@
+[
+  { "title": "New Arrivals", "image": "category_new.png", "label": "NEW" },
+  { "title": "Best Sellers", "image": "category_best_sellers.png", "label": "BEST SELLERS" },
+  { "title": "Seasonal Sale", "image": "category_sale.png", "label": "SALE" },
+  { "title": "Curated Gifts", "image": "category_gifts.png", "label": "GIFTS" }
+]

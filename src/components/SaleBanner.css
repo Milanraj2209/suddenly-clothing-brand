@@ -1,0 +1,61 @@
+.sale-banner {
+  background-color: var(--color-beige);
+  overflow: hidden;
+  margin: 80px 5%;
+}
+
+.sale-container {
+  display: flex;
+  align-items: center;
+  min-height: 400px;
+}
+
+.sale-content {
+  flex: 1;
+  padding: 60px;
+}
+
+.sale-label {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-gray);
+  display: block;
+  margin-bottom: 20px;
+}
+
+.sale-title {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.sale-text {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  color: var(--color-dark-gray);
+}
+
+.sale-image-container {
+  flex: 1;
+  height: 500px;
+}
+
+.sale-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .sale-container {
+    flex-direction: column-reverse;
+  }
+  .sale-content {
+    padding: 40px 20px;
+    text-align: center;
+  }
+  .sale-image-container {
+    width: 100%;
+    height: 300px;
+  }
+}
