@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1776708941550,
+    "name": "Elite Member",
+    "email": "elite@aura.com",
+    "password": "$2b$10$IqERKjXqKiy3SBO/D5b4oehnL65PAOA8x/UE6DLDaaLbEIsgoQf/O"
+  },
+  {
+    "id": 1776709874469,
+    "name": "Order King",
+    "email": "king@aura.com",
+    "password": "$2b$10$pFLdzc.et31.tCHwr2Xv9eoS3bnObC.4ZcVrSqB8IaIzbcwALeKV6"
+  }
+]

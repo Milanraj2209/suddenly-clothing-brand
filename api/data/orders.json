@@ -1,0 +1,38 @@
+[
+  {
+    "id": "ORD-ADM-278833",
+    "customer": "Legacy/Guest",
+    "items": [
+      {
+        "name": "Premium Silk Tie"
+      }
+    ],
+    "total": "₹4,199",
+    "status": "Delivered",
+    "date": "19/4/2026, 12:26:44 am"
+  },
+  {
+    "id": "ORD-ADM-182597",
+    "customer": "Legacy/Guest",
+    "items": [
+      {
+        "name": "Cloth"
+      }
+    ],
+    "total": "₹1,999",
+    "status": "Pending",
+    "date": "19/4/2026, 12:29:21 am"
+  },
+  {
+    "id": "ORD-ADM-TEST-123",
+    "customer": "Julia (Verified)",
+    "items": [
+      {
+        "name": "Handmade Scarf"
+      }
+    ],
+    "total": "₹9,999",
+    "status": "Pending",
+    "date": "19/4/2026, 12:46:05 am"
+  }
+]
