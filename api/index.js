@@ -107,5 +107,5 @@ app.get('*', (req, res) => {
     else res.status(404).send('Frontend building...');
 });
 
-const port = parseInt(process.env.PORT, 10) || 5000;
-app.listen(port, '0.0.0.0', () => console.log(`🚀 Server on port ${port}`));
+// Export for Vercel
+module.exports = app;
