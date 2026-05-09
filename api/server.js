@@ -158,4 +158,21 @@ app.post(['/api/upload', '/upload'], authMiddleware, upload.single('image'), (re
     res.json({ success: true, url: `/uploads/${req.file.filename}` });
 });
 
+app.get(['/api/uploads', '/uploads'], authMiddleware, (req, res) => {
+    fs.readdir(UPLOADS_DIR, (err, files) => {
+        if (err) return res.status(500).json({ message: 'Error reading uploads' });
+        res.json(files.map(file => `/uploads/${file}`));
+    });
+});
+
+app.delete(['/api/uploads/:filename', '/uploads/:filename'], authMiddleware, (req, res) => {
+    const filePath = path.join(UPLOADS_DIR, req.params.filename);
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        res.json({ success: true, message: 'File deleted' });
+    } else {
+        res.status(404).json({ message: 'File not found' });
+    }
+});
+
 export default app;

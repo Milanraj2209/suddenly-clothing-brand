@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import LandingPage from './components/LandingPage';
 import ProductDetail from './components/ProductDetail';
@@ -23,6 +23,7 @@ import VariantSelector from './components/VariantSelector';
 function App() {
   const [isLocked, setIsLocked] = useState(false);
   const [configLoading, setConfigLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     fetch('/api/config')
@@ -36,7 +37,7 @@ function App() {
 
   if (configLoading) return null;
 
-  const isAdminRoute = window.location.pathname.startsWith('/admin');
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   if (isLocked && !isAdminRoute) {
     return <ComingSoon />;

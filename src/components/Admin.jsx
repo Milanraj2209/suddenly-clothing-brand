@@ -7,6 +7,8 @@ import './MediaLibrary.css';
 const Admin = ({ onLogout }) => {
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -29,14 +31,7 @@ const Admin = ({ onLogout }) => {
   });
 
   useEffect(() => {
-    fetch('/api/config')
-      .then(res => res.json())
-      .then(data => {
-        setIsStoreLocked(data.isLocked);
-        if (data.homePage) setHomePageConfig(data.homePage);
-      });
-    
-    fetchOrders();
+    fetchData();
   }, []);
 
   const fetchOrders = () => {
