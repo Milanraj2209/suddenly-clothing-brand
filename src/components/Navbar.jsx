@@ -129,26 +129,26 @@ const Navbar = () => {
           </div>
 
         </div>
-      </nav>
 
-      {/* Mobile Menu Overlay */}
-      <div className={`mobile-menu ${menuOpen ? 'mobile-menu-open' : ''}`}>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/shop">Shop</Link></li>
-          <li><Link to="/sale" className="mobile-sale-link">Sale</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
-          <li>
-            <button 
-              className="mobile-auth-btn" 
-              onClick={() => { setIsAuthOpen(true); setMenuOpen(false); }}
-            >
-              {user ? `Account (${user.name})` : 'Login / Register'}
-            </button>
-          </li>
-          <li className="mobile-admin-link"><Link to="/admin">Admin ↗</Link></li>
-        </ul>
-      </div>
+        {/* Mobile Menu Dropdown */}
+        <div className={`mobile-menu ${menuOpen ? 'mobile-menu-open' : ''}`}>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/shop">Shop</Link></li>
+            <li><Link to="/sale" className="mobile-sale-link">Sale</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
+            <li>
+              <button 
+                className="mobile-auth-btn" 
+                onClick={() => { setIsAuthOpen(true); setMenuOpen(false); }}
+              >
+                {user ? `Account (${user.name})` : 'Login / Register'}
+              </button>
+            </li>
+            <li className="mobile-admin-link"><Link to="/admin">Admin ↗</Link></li>
+          </ul>
+        </div>
+      </nav>
     </>
   );
 };
