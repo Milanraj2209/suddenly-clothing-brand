@@ -128,6 +128,9 @@ const Navbar = () => {
             </div>
           </div>
 
+        </div>
+      </nav>
+
       {/* Mobile Menu Overlay */}
       <div className={`mobile-menu ${menuOpen ? 'mobile-menu-open' : ''}`}>
         <ul>
