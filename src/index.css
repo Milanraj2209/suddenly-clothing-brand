@@ -47,6 +47,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.3s ease, color 0.3s ease;
+  padding-bottom: 60px; /* Space for bottom nav bar */
 }
 
 h1, h2, h3, h4, h5, h6 {
