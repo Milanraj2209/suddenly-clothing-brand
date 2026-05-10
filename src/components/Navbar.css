@@ -78,14 +78,14 @@
 .icon-btn {
   color: var(--color-black);
   transition: transform var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .icon-btn:hover {
   transform: scale(1.1);
-}
-
-.cart-toggle {
-  position: relative;
 }
 
 .cart-badge {
